@@ -8,8 +8,8 @@ import Link from "next/link"
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-[400px]">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted/50">
+      <Card className="w-[400px] shadow-lg">
         <CardHeader>
           <CardTitle>Welcome back</CardTitle>
           <CardDescription>Sign in to your account</CardDescription>

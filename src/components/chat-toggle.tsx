@@ -1,8 +1,11 @@
 "use client"
 
-import { useState } from "react"
-import { MessagesSquare, Table, Plus, ArrowUp } from "lucide-react"
+import * as React from "react"
+import { MessagesSquare, Table, Send, Plus, ArrowUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { AIMessage } from "@/components/ai-message"
+import { Separator } from "@/components/ui/separator"
+import { SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,57 +19,145 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group"
-import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export function ChatToggle() {
-  const [mode, setMode] = useState("data")
-  const [isOpen, setIsOpen] = useState(false)
+  const [mode, setMode] = React.useState("data")
+  const [isOpen, setIsOpen] = React.useState(false)
+  const isMobile = useIsMobile()
 
   const handleToggle = (value: string) => {
     if (value) {
       setMode(value)
-      toast.success(`Switched to ${value} mode`)
     }
   }
 
+  const [messages, setMessages] = React.useState([
+    { id: 1, text: "Hello! How can I help you today?", isAI: true },
+  ])
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [input, setInput] = React.useState("")
+  const chatContainerRef = React.useRef<HTMLDivElement>(null)
+
+  const handleSend = async () => {
+    if (!input.trim()) return
+    
+    const newMessages = [
+      ...messages,
+      { id: messages.length + 1, text: input, isAI: false }
+    ]
+    setMessages(newMessages)
+    setInput("")
+    setIsLoading(true)
+
+    // Simulate AI response
+    setTimeout(() => {
+      setMessages([
+        ...newMessages,
+        { id: messages.length + 2, text: "This is a simulated AI response to your message. In a real application, this would be replaced with actual AI-generated content.", isAI: true }
+      ])
+      setIsLoading(false)
+    }, 3000)
+  }
+
+  React.useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+    }
+  }, [messages])
+
   return (
     <div className="fixed bottom-6 right-6 flex items-center gap-2">
-      <ToggleGroup type="single" value={mode} onValueChange={handleToggle}>
-        <ToggleGroupItem value="data" aria-label="Toggle data view">
-          <Table className="h-4 w-4" />
-        </ToggleGroupItem>
-        <ToggleGroupItem value="chat" aria-label="Toggle chat view">
-          <MessagesSquare className="h-4 w-4" />
-        </ToggleGroupItem>
-      </ToggleGroup>
+      <div className="shadow-lg rounded-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border border-border hover:border-primary/50 transition-all p-1.5">
+        <ToggleGroup type="single" value={mode} onValueChange={handleToggle}>
+          <ToggleGroupItem value="data" aria-label="Toggle data view" className="data-[state=on]:bg-accent data-[state=on]:text-accent-foreground">
+            <Table className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="chat" aria-label="Toggle chat view" className="data-[state=on]:bg-accent data-[state=on]:text-accent-foreground">
+            <MessagesSquare className="h-4 w-4" />
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
       
       <Sheet open={mode === "chat" && isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button 
             variant="outline" 
-            className={mode === "chat" ? "": "hidden"}
+            className={cn(
+              "shadow-lg border-2 transition-colors",
+              mode === "chat" ? "border-primary/20 hover:border-primary/40" : "hidden"
+            )}
             onClick={() => setIsOpen(true)}
           >
             Open Chat
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="w-[600px] sm:w-[800px] p-0">
+        <SheetContent 
+            side={isMobile ? "bottom" : "right"}
+            className={cn(
+              "p-0",
+              isMobile 
+                ? "h-[94vh] rounded-t-xl border-t" 
+                : "w-[85vw] 2xl:w-[90vw] rounded-l-xl"
+            )}
+          >
           <div className="flex flex-col h-full">
-            <div className="flex-1 overflow-auto p-4">
-              {/* Chat messages would go here */}
-              <div className="space-y-4">
-                <div className="bg-muted p-4 rounded-lg">
-                  Hello! How can I help you today?
+            <div className="border-b px-6 py-4">
+              <SheetTitle className="text-lg font-semibold">AI Assistant</SheetTitle>
+            </div>
+            <div 
+              ref={chatContainerRef}
+              className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth"
+            >
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={cn(
+                    "flex",
+                    msg.isAI ? "justify-start" : "justify-end"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "rounded-lg p-4 max-w-[80%]",
+                      msg.isAI
+                        ? "bg-muted text-foreground mr-12"
+                        : "bg-primary text-primary-foreground ml-12"
+                    )}
+                  >
+                    {msg.isAI ? (
+                      <AIMessage message={msg.text} />
+                    ) : (
+                      <p className="text-sm leading-loose">{msg.text}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
+              ))}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-muted rounded-lg p-4 max-w-[80%] mr-12">
+                    <AIMessage message="" isLoading />
+                  </div>
+                </div>
+              )}
             </div>
             <div className="border-t p-4">
               <InputGroup>
-                <InputGroupTextarea placeholder="Ask, Search or Chat..." />
+                <InputGroupTextarea 
+                  placeholder="Ask, Search or Chat..." 
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault()
+                      handleSend()
+                    }
+                  }}
+                />
                 <InputGroupAddon align="block-end">
                   <InputGroupButton
                     variant="outline"
@@ -95,7 +186,8 @@ export function ChatToggle() {
                     variant="default"
                     className="rounded-full"
                     size="icon-xs"
-                    onClick={() => toast.success("Message sent!")}
+                    onClick={handleSend}
+                    disabled={!input.trim() || isLoading}
                   >
                     <ArrowUp className="h-4 w-4" />
                     <span className="sr-only">Send</span>

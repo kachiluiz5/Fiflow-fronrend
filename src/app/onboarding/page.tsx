@@ -54,8 +54,8 @@ export default function OnboardingPage() {
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1))
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <Card className="w-[500px]">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted/50 p-4">
+      <Card className="w-[600px] shadow-lg">
         <CardHeader>
           <CardTitle>Tell us about yourself</CardTitle>
           <CardDescription>Step {step} of 4</CardDescription>
