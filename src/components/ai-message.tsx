@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 interface AIMessageProps {
   message: string
   isLoading?: boolean
+  isAI?: boolean
 }
 
 const LOADING_STATES = [
@@ -19,7 +20,7 @@ const LOADING_STATES = [
   "Finalizing response..."
 ]
 
-export function AIMessage({ message, isLoading }: AIMessageProps) {
+export function AIMessage({ message, isLoading, isAI = true }: AIMessageProps) {
   const [loadingState, setLoadingState] = React.useState(0)
 
   React.useEffect(() => {
@@ -31,35 +32,49 @@ export function AIMessage({ message, isLoading }: AIMessageProps) {
     }
   }, [isLoading])
 
+  // Bubble base styles — consistent radius and sizing for single-line messages
+  const bubbleBase = cn(
+    "group relative rounded-2xl py-2 px-3 text-sm leading-normal break-words min-w-[6rem] max-w-[65%]",
+    isAI ? "bg-muted text-foreground mr-12" : "bg-primary text-primary-foreground ml-12"
+  )
+
   if (isLoading) {
     return (
-      <div className="flex items-center space-x-2 text-muted-foreground">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        <span className="text-sm">{LOADING_STATES[loadingState]}</span>
+      <div className={bubbleBase}>
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          <span className="text-sm">{LOADING_STATES[loadingState]}</span>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="group relative space-y-2">
-      <p className="text-sm leading-loose">{message}</p>
-      <div className="absolute -right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+    <div className={bubbleBase}>
+      <p className="whitespace-pre-wrap">{message}</p>
+
+      {/* Controls shown on hover at the bottom-right of the bubble */}
+      <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
         <Button
           variant="ghost"
           size="icon"
           className="h-8 w-8"
           onClick={() => {
-            navigator.clipboard.writeText(message)
-            toast.success("Copied to clipboard")
+            try {
+              navigator.clipboard.writeText(message || "")
+              toast.success("Copied to clipboard")
+            } catch (e) {
+              toast.error("Copy failed")
+            }
           }}
         >
           <Copy className="h-4 w-4" />
         </Button>
         <div className="flex gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toast("Thanks for the feedback 👍")}>
             <ThumbsUp className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toast("Thanks for the feedback 👎")}>
             <ThumbsDown className="h-4 w-4" />
           </Button>
         </div>

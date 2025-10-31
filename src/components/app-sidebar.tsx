@@ -40,11 +40,7 @@ const data = {
     avatar: "/avatars/user.jpg",
   },
   navMain: [
-    {
-      title: "Connect/Upload",
-      url: "/connect-upload",
-      icon: IconFileAi,
-    },
+
     {
       title: "Data History",
       url: "/data-history",

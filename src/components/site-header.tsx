@@ -1,6 +1,15 @@
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog"
 
 export function SiteHeader() {
   return (
@@ -13,16 +22,36 @@ export function SiteHeader() {
         />
         <h1 className="text-base font-medium">Documents</h1>
         <div className="ml-auto flex items-center gap-2">
-          <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
-            <a
-              href=""
-              rel="noopener noreferrer"
-              target="_blank"
-              className="dark:text-foreground"
-            >
-              Submit Feedback
-            </a>
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="hidden sm:flex">
+                Submit Feedback
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Submit feedback</DialogTitle>
+                <DialogDescription>
+                  We appreciate your feedback — tell us what's on your mind and
+                  we'll use it to improve Fiflow.
+                </DialogDescription>
+              </DialogHeader>
+
+              <textarea
+                placeholder="Share feedback..."
+                className="w-full min-h-[6rem] rounded-md border p-2 mt-2 bg-transparent"
+              />
+
+              <div className="flex justify-end gap-2 mt-4">
+                <DialogClose asChild>
+                  <Button variant="ghost">Cancel</Button>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Button>Send feedback</Button>
+                </DialogClose>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </header>

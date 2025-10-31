@@ -123,27 +123,14 @@ export function ChatToggle() {
                     msg.isAI ? "justify-start" : "justify-end"
                   )}
                 >
-                  <div
-                    className={cn(
-                      "rounded-lg p-4 max-w-[80%]",
-                      msg.isAI
-                        ? "bg-muted text-foreground mr-12"
-                        : "bg-primary text-primary-foreground ml-12"
-                    )}
-                  >
-                    {msg.isAI ? (
-                      <AIMessage message={msg.text} />
-                    ) : (
-                      <p className="text-sm leading-loose">{msg.text}</p>
-                    )}
-                  </div>
+                  {/* Use AIMessage for both AI and user messages so controls and styles are consistent */}
+                  <AIMessage message={msg.text} isAI={msg.isAI} />
                 </div>
               ))}
+
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-muted rounded-lg p-4 max-w-[80%] mr-12">
-                    <AIMessage message="" isLoading />
-                  </div>
+                  <AIMessage message="" isLoading isAI />
                 </div>
               )}
             </div>
