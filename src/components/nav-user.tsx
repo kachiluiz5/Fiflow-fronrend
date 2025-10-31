@@ -31,17 +31,19 @@ import {
 
 export function NavUser({
   user,
+  className,
 }: {
   user: {
     name: string
     email: string
     avatar: string
   }
+  className?: string
 }) {
   const { isMobile } = useSidebar()
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className={className}>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

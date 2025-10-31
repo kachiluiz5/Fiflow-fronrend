@@ -1,4 +1,7 @@
+"use client"
+
 import { AppSidebar } from "@/components/app-sidebar"
+import { ChatToggle } from "@/components/chat-toggle"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { DataTable } from "@/components/data-table"
 import { SectionCards } from "@/components/section-cards"
@@ -7,6 +10,7 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
+import { Toaster } from "@/components/ui/sonner"
 
 import data from "./data.json"
 
@@ -35,6 +39,8 @@ export default function Page() {
           </div>
         </div>
       </SidebarInset>
+      <ChatToggle />
+      <Toaster />
     </SidebarProvider>
   )
 }
