@@ -1,5 +1,8 @@
 "use client"
 
+import { AppSidebar } from "@/components/app-sidebar"
+import { ChatToggle } from "@/components/chat-toggle"
+import { SiteHeader } from "@/components/site-header"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -8,9 +11,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/sidebar"
+import { Toaster } from "@/components/ui/sonner"
 import { Eye, Trash2 } from "lucide-react"
 
-const historicalData = [
+interface HistoricalDataItem {
+  id: number
+  title: string
+  date: string
+  type: string
+  description: string
+}
+
+const historicalData: HistoricalDataItem[] = [
   {
     id: 1,
     title: "Q4 Financial Report",
@@ -37,41 +53,60 @@ const historicalData = [
 
 export default function DataHistoryPage() {
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-2">Data History</h1>
-        <p className="text-muted-foreground">
-          View and manage your historical data analysis and reports.
-        </p>
-      </div>
-
-      <div className="grid gap-6">
-        {historicalData.map((item) => (
-          <Card key={item.id}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset" />
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <div className="flex flex-col gap-4 p-6 md:gap-6">
               <div>
-                <CardTitle className="text-xl">{item.title}</CardTitle>
-                <CardDescription>{item.type}</CardDescription>
+                <h1 className="text-3xl font-bold tracking-tight mb-2">Data History</h1>
+                <p className="text-muted-foreground">
+                  View and manage your historical data analysis and reports.
+                </p>
               </div>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
-                  <Eye className="h-4 w-4 mr-1" />
-                  View
-                </Button>
-                <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600">
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+
+              <div className="grid gap-6">
+                {historicalData.map((item) => (
+                  <Card key={item.id}>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <div>
+                        <CardTitle className="text-xl">{item.title}</CardTitle>
+                        <CardDescription>{item.type}</CardDescription>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="outline" size="sm">
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
+                        <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex justify-between items-start">
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                        <span className="text-sm text-muted-foreground">{item.date}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex justify-between items-start">
-                <p className="text-sm text-muted-foreground">{item.description}</p>
-                <span className="text-sm text-muted-foreground">{item.date}</span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+            </div>
+          </div>
+        </div>
+      </SidebarInset>
+      <ChatToggle />
+      <Toaster />
+    </SidebarProvider>
   )
 }
