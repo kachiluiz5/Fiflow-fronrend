@@ -99,19 +99,21 @@ export function ChatToggle() {
         <SheetContent 
             side={isMobile ? "bottom" : "right"}
             className={cn(
-              "p-0",
+              "p-0 flex-1",
               isMobile 
-                ? "h-[94vh] rounded-t-xl border-t" 
-                : "w-[85vw] 2xl:w-[90vw] rounded-l-xl"
+                ? "h-[94vh] rounded-t-xl border-t w-full" 
+                : "!w-[80%] !max-w-[1400px] min-w-[800px] rounded-l-xl"
             )}
           >
           <div className="flex flex-col h-full">
             <div className="border-b px-6 py-4">
-              <SheetTitle className="text-lg font-semibold">AI Assistant</SheetTitle>
+              <div className="max-w-[800px] mx-auto w-full">
+                <SheetTitle className="text-lg font-semibold">AI Assistant</SheetTitle>
+              </div>
             </div>
             <div 
               ref={chatContainerRef}
-              className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth"
+              className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth max-w-[800px] mx-auto w-full"
             >
               {messages.map((msg) => (
                 <div
@@ -146,54 +148,56 @@ export function ChatToggle() {
               )}
             </div>
             <div className="border-t p-4">
-              <InputGroup>
-                <InputGroupTextarea 
-                  placeholder="Ask, Search or Chat..." 
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault()
-                      handleSend()
-                    }
-                  }}
-                />
-                <InputGroupAddon align="block-end">
-                  <InputGroupButton
-                    variant="outline"
-                    className="rounded-full"
-                    size="icon-xs"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </InputGroupButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <InputGroupButton variant="ghost">Auto</InputGroupButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      side="top"
-                      align="start"
-                      className="[--radius:0.95rem]"
+              <div className="max-w-[800px] mx-auto w-full">
+                <InputGroup>
+                  <InputGroupTextarea 
+                    placeholder="Ask, Search or Chat..." 
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault()
+                        handleSend()
+                      }
+                    }}
+                  />
+                  <InputGroupAddon align="block-end">
+                    <InputGroupButton
+                      variant="outline"
+                      className="rounded-full"
+                      size="icon-xs"
                     >
-                      <DropdownMenuItem>Auto</DropdownMenuItem>
-                      <DropdownMenuItem>Agent</DropdownMenuItem>
-                      <DropdownMenuItem>Manual</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <InputGroupText className="ml-auto">52% used</InputGroupText>
-                  <Separator orientation="vertical" className="!h-4" />
-                  <InputGroupButton
-                    variant="default"
-                    className="rounded-full"
-                    size="icon-xs"
-                    onClick={handleSend}
-                    disabled={!input.trim() || isLoading}
-                  >
-                    <ArrowUp className="h-4 w-4" />
-                    <span className="sr-only">Send</span>
-                  </InputGroupButton>
-                </InputGroupAddon>
-              </InputGroup>
+                      <Plus className="h-4 w-4" />
+                    </InputGroupButton>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <InputGroupButton variant="ghost">Auto</InputGroupButton>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        side="top"
+                        align="start"
+                        className="[--radius:0.95rem]"
+                      >
+                        <DropdownMenuItem>Auto</DropdownMenuItem>
+                        <DropdownMenuItem>Agent</DropdownMenuItem>
+                        <DropdownMenuItem>Manual</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <InputGroupText className="ml-auto">52% used</InputGroupText>
+                    <Separator orientation="vertical" className="!h-4" />
+                    <InputGroupButton
+                      variant="default"
+                      className="rounded-full"
+                      size="icon-xs"
+                      onClick={handleSend}
+                      disabled={!input.trim() || isLoading}
+                    >
+                      <ArrowUp className="h-4 w-4" />
+                      <span className="sr-only">Send</span>
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
+              </div>
             </div>
           </div>
         </SheetContent>

@@ -1,7 +1,6 @@
 "use client"
 
 import { AppSidebar } from "@/components/app-sidebar"
-import { ChatToggle } from "@/components/chat-toggle"
 import { SiteHeader } from "@/components/site-header"
 import { Button } from "@/components/ui/button"
 import {
@@ -105,7 +104,6 @@ export default function DataHistoryPage() {
           </div>
         </div>
       </SidebarInset>
-      <ChatToggle />
       <Toaster />
     </SidebarProvider>
   )
