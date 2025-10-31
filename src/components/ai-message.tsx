@@ -50,11 +50,13 @@ export function AIMessage({ message, isLoading, isAI = true }: AIMessageProps) {
   }
 
   return (
-    <div className={bubbleBase}>
-      <p className="whitespace-pre-wrap">{message}</p>
+    <div className="group inline-flex flex-col">
+      <div className={bubbleBase}>
+        <p className="whitespace-pre-wrap">{message}</p>
+      </div>
 
-      {/* Controls shown on hover at the bottom-right of the bubble */}
-      <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+      {/* Controls placed outside the bubble, shown on hover of the whole message */}
+      <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
         <Button
           variant="ghost"
           size="icon"
@@ -70,14 +72,12 @@ export function AIMessage({ message, isLoading, isAI = true }: AIMessageProps) {
         >
           <Copy className="h-4 w-4" />
         </Button>
-        <div className="flex gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toast("Thanks for the feedback 👍")}>
-            <ThumbsUp className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toast("Thanks for the feedback 👎")}>
-            <ThumbsDown className="h-4 w-4" />
-          </Button>
-        </div>
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toast("Thanks for the feedback 👍")}>
+          <ThumbsUp className="h-4 w-4" />
+        </Button>
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toast("Thanks for the feedback 👎")}>
+          <ThumbsDown className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   )

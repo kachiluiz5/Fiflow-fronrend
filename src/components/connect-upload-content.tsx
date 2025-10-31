@@ -23,7 +23,7 @@ export function ConnectUploadContent() {
               <TabsTrigger value="connect">Connect Cloud Storage</TabsTrigger>
             </TabsList>
             <TabsContent value="upload">
-              <div className="border-2 border-dashed rounded-lg p-12 text-center">
+              <div className="border-2 border-dashed rounded-lg p-12 text-center flex flex-col items-center justify-center">
                 <div className="mx-auto w-16 h-16 mb-4">
                   <svg
                     className="w-full h-full text-gray-400"

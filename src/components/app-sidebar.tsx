@@ -80,10 +80,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
+
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavUser user={data.user} className="mt-auto" />
       </SidebarContent>
+
+      <SidebarFooter>
+        <div className="w-full px-4 py-3">
+          <div className="flex items-center justify-between gap-4 rounded-md bg-muted/80 p-3 ring-1 ring-border/10 shadow-sm dark:bg-muted/30">
+            <div>
+              <p className="text-xs text-muted-foreground">Credits</p>
+              <p className="text-lg font-semibold">{data.credits}</p>
+            </div>
+            <a
+              href="/billing"
+              className="text-sm text-primary hover:underline"
+              aria-label="Manage credits"
+            >
+              Buy
+            </a>
+          </div>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   )
 }

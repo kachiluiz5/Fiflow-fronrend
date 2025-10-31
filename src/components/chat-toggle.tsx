@@ -33,6 +33,12 @@ export function ChatToggle() {
   const handleToggle = (value: string) => {
     if (value) {
       setMode(value)
+      // auto-open the sheet when switching to chat, close when switching away
+      if (value === "chat") {
+        setIsOpen(true)
+      } else {
+        setIsOpen(false)
+      }
     }
   }
 
@@ -71,30 +77,39 @@ export function ChatToggle() {
   }, [messages])
 
   return (
-    <div className="fixed bottom-6 right-6 flex items-center gap-2">
-      <div className="shadow-lg rounded-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border border-border hover:border-primary/50 transition-all p-1.5">
-        <ToggleGroup type="single" value={mode} onValueChange={handleToggle}>
-          <ToggleGroupItem value="data" aria-label="Toggle data view" className="data-[state=on]:bg-accent data-[state=on]:text-accent-foreground">
+    // Bottom-center floating navigation with icon + label pills
+    <div className="fixed left-1/2 bottom-6 -translate-x-1/2 z-50 flex items-center">
+      <div className={cn(
+        "flex items-center gap-1 rounded-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-lg p-1.5",
+        // thicker, more visible container border when chat is active
+        mode === "chat" ? "border-4 border-primary/30" : "border border-border"
+      )}>
+        <ToggleGroup type="single" value={mode} onValueChange={handleToggle} className="flex items-center gap-1">
+          <ToggleGroupItem
+            value="data"
+            aria-label="Toggle data view"
+            className="inline-flex items-center gap-3 px-4 py-2 rounded-full data-[state=on]:bg-accent data-[state=on]:text-accent-foreground data-[state=on]:scale-105 data-[state=on]:shadow-md transition-all duration-200"
+          >
             <Table className="h-4 w-4" />
+            <span className="text-sm font-medium">Data</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="chat" aria-label="Toggle chat view" className="data-[state=on]:bg-accent data-[state=on]:text-accent-foreground">
+          <div className="w-px h-6 bg-border/60 mx-1" />
+          <ToggleGroupItem
+            value="chat"
+            aria-label="Toggle chat view"
+            className="inline-flex items-center gap-3 px-4 py-2 rounded-full data-[state=on]:bg-accent data-[state=on]:text-accent-foreground data-[state=on]:scale-105 data-[state=on]:shadow-md transition-all duration-200"
+          >
             <MessagesSquare className="h-4 w-4" />
+            <span className="text-sm font-medium">Chat</span>
           </ToggleGroupItem>
         </ToggleGroup>
       </div>
-      
+
+      {/* Sheet is controlled — will open automatically when mode === 'chat' */}
       <Sheet open={mode === "chat" && isOpen} onOpenChange={setIsOpen}>
+        {/* keep a hidden trigger to preserve keyboard accessibility, but sheet opens programmatically */}
         <SheetTrigger asChild>
-          <Button 
-            variant="outline" 
-            className={cn(
-              "shadow-lg border-2 transition-colors",
-              mode === "chat" ? "border-primary/20 hover:border-primary/40" : "hidden"
-            )}
-            onClick={() => setIsOpen(true)}
-          >
-            Open Chat
-          </Button>
+          <button className="sr-only">Open Chat</button>
         </SheetTrigger>
         <SheetContent 
             side={isMobile ? "bottom" : "right"}
